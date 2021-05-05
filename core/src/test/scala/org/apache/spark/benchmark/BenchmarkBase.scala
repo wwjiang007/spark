@@ -48,7 +48,15 @@ abstract class BenchmarkBase {
       val jdkString = if (version > 8) s"-jdk$version" else ""
       val resultFileName =
         s"${this.getClass.getSimpleName.replace("$", "")}$jdkString$suffix-results.txt"
-      val file = new File(s"benchmarks/$resultFileName")
+      val prefix = Benchmarks.currentProjectRoot.map(_ + "/").getOrElse("")
+      val dir = new File(s"${prefix}benchmarks/")
+      if (!dir.exists()) {
+        // scalastyle:off println
+        println(s"Creating ${dir.getAbsolutePath} for benchmark results.")
+        // scalastyle:on println
+        dir.mkdirs()
+      }
+      val file = new File(dir, resultFileName)
       if (!file.exists()) {
         file.createNewFile()
       }
